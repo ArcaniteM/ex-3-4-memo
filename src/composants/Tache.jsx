@@ -5,8 +5,18 @@ import formaterDateEtHeure from '../code/util';
 import IconButton from '@mui/material/IconButton';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import RemoveCircleIcon from '@mui/icons-material/RemoveCircle';
+import * as tacheModele from '../code/tache-modele';
 
-export default function Tache({id, texte, completee, date}) {
+
+
+export default function Tache({id, texte, completee, date, utilisateur, etatTaches, supprimerTache}) {
+
+  function gererSupprimer() {
+    // Appeler la fonction de ListeDossiers qui gère la suppression dans Firestore
+    supprimerTache(id);
+
+  }
+
   return (
     <div className="Tache">
       <IconButton color="success" className='btn-padding-reduit-gauche'>
@@ -14,8 +24,8 @@ export default function Tache({id, texte, completee, date}) {
       </IconButton>
       <span className="texte">{texte}</span>
       <span className="date">({formaterDateEtHeure(date)})</span>
-      <IconButton color="error" className='btn-padding-reduit-droite'>
-        <RemoveCircleIcon />
+      <IconButton onClick={gererSupprimer} color="error" className='btn-padding-reduit-droite'>
+        <RemoveCircleIcon  />
       </IconButton>
     </div>
   );

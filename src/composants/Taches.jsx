@@ -5,16 +5,25 @@ import { useState, useEffect } from 'react';
 
 export default function Taches({etatTaches, utilisateur}) {
   const uid = utilisateur.uid;
-  const [taches, setTaches] = etatTaches;
+  const [taches, setTaches] = etatTaches; //? 
 
   /**
    * On cherche les tâches une seule fois après l'affichage du composant
    */
-  useEffect(() => 
-    tacheModele.lireTout(uid).then(
+  useEffect(
+    () => tacheModele.lireTout(uid).then(
       taches => setTaches(taches)
     )
   , [setTaches, uid]);
+
+  function supprimerTache(idTache) {
+    // Utiliser le modèle des dossiers pour supprimer le dossier dans Firestore
+    tacheModele.supprimer(utilisateur.uid, idTache).then(
+      () => setTaches(taches.filter(
+        tache => tache.id !== idTache
+      ))
+    );
+  }
 
   /**
    * Gérer le formulaire d'ajout de nouvelle tâche en appelant la méthode 
@@ -41,6 +50,15 @@ export default function Taches({etatTaches, utilisateur}) {
         tache => setTaches([tache, ...taches])
       );
     }
+
+  }
+
+  function orderByTitle(){
+    tacheModele.orderTitle(uid);
+  }
+
+  function orderByDate(){
+    tacheModele.orderDate(uid);
   }
 
   return (
@@ -55,12 +73,12 @@ export default function Taches({etatTaches, utilisateur}) {
         />
       </form>
       <div className="titre-liste-taches">
-        <span className="texte">Tâche</span>
-        <span className="date">Date d'ajout</span>
+        <span onClick={orderByTitle} className="texte">Tâche</span>
+        <span onClick={orderByDate} className="date">Date d'ajout</span>
       </div>
       <div className="liste-taches">
         {
-          taches.map(tache => <Tache key={tache.id} {... tache} />)
+          taches.map(tache => <Tache supprimerTache={supprimerTache} etatTaches={etatTaches} utilisateur={utilisateur} key={tache.id} {... tache} />)
         }
       </div>
     </section>
