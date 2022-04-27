@@ -5,7 +5,9 @@ import { useState, useEffect } from 'react';
 
 export default function Taches({etatTaches, utilisateur}) {
   const uid = utilisateur.uid;
-  const [taches, setTaches] = etatTaches; //? 
+  const [taches, setTaches] = etatTaches; //?
+  const [orderState, setOrderState] = useState(false) 
+  // const [orderTexte, setOrderTexte] = useState(false)
 
   /**
    * On cherche les tâches une seule fois après l'affichage du composant
@@ -53,12 +55,18 @@ export default function Taches({etatTaches, utilisateur}) {
 
   }
 
-  function orderByTitle(){
-    tacheModele.orderTitle(uid);
+  function orderByTitle() {
+    tacheModele.orderTitle(uid, orderState).then((res) => {
+      setTaches(res)
+      setOrderState(!orderState)
+    })
   }
 
   function orderByDate(){
-    tacheModele.orderDate(uid);
+    tacheModele.orderDate(uid, orderState).then((res) => {
+      setTaches(res)
+      setOrderState(!orderState)
+    })
   }
 
   return (

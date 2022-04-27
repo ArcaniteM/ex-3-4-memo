@@ -2,17 +2,19 @@ import { bdFirestore, collUtil, collTaches } from './init';
 import { getDocs, query, orderBy, collection, addDoc, Timestamp, getDoc, deleteDoc, updateDoc, doc } from "firebase/firestore"; 
 
 //order by date on click
-export async function orderDate(uid) {
+export async function orderDate(uid, orderState) {
+  const orderCriteria = orderState ? "desc" : "asc"
   return getDocs(query(collection(bdFirestore, collUtil, uid, collTaches), 
-      orderBy("date", "desc"))).then(
+      orderBy("date", orderCriteria))).then(
         od  => od.docs.map(doc => ({id: doc.id, ...doc.data()}))
       );
 }
 
 //order by title on click
-export async function orderTitle(uid) {
+export async function orderTitle(uid, orderState) {
+  const orderCriteria = orderState ? "asc" : "desc"
   return getDocs(query(collection(bdFirestore, collUtil, uid, collTaches), 
-      orderBy("texte", "desc"))).then(
+      orderBy("texte", orderCriteria))).then(
         ot  => ot.docs.map(doc => ({id: doc.id, ...doc.data()}))
       );
 }
